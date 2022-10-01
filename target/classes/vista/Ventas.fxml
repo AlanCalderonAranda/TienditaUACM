@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="766.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlador.VentasController">
+   <children>
+      <AnchorPane layoutX="-8.0" prefHeight="400.0" prefWidth="438.0">
+         <children>
+            <ImageView fx:id="IMGImagenProducto" fitHeight="122.0" fitWidth="164.0" layoutX="42.0" layoutY="37.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/producto.png" />
+               </image></ImageView>
+            <GridPane layoutX="246.0" layoutY="50.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label text="Nombre: " />
+                  <Label text="Precio: " GridPane.rowIndex="1" />
+                  <Label text="Peso: " GridPane.rowIndex="2" />
+                  <Label fx:id="LBNombre" text="Label" GridPane.columnIndex="1" />
+                  <Label fx:id="LBPrecio" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Label fx:id="LBPeso" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+               </children>
+            </GridPane>
+            <GridPane layoutX="14.0" layoutY="263.0" prefHeight="122.0" prefWidth="426.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="160.39996337890625" minWidth="10.0" prefWidth="138.79998779296875" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="145.20001220703125" minWidth="10.0" prefWidth="145.20001220703125" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Button fx:id="BTNChecarPRecio" mnemonicParsing="false" onAction="#ConsultarPrecioProducto" prefHeight="26.0" prefWidth="125.0" text="Checar Precio" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <Button fx:id="BTNEliminarProducto" mnemonicParsing="false" onAction="#EliminarProductoCarrito" prefHeight="26.0" prefWidth="125.0" text="Eliminar Producto" GridPane.columnIndex="1" />
+                  <Button fx:id="BTNProcesarVenta" mnemonicParsing="false" prefHeight="26.0" prefWidth="125.0" text="Procesar Venta" />
+                  <Button fx:id="BTNCancelarVenta" mnemonicParsing="false" onAction="#CancelarVentaTotal" prefHeight="26.0" prefWidth="125.0" text="Cancelar Venta" GridPane.columnIndex="2" />
+                  <Button fx:id="DuplicarProducto" mnemonicParsing="false" onAction="#DuplicarProducto" prefHeight="26.0" prefWidth="125.0" text="Duplicar Producto" GridPane.rowIndex="1" />
+                  <Button fx:id="BTNMultiplicarProducto" mnemonicParsing="false" onAction="#MultiplicarProducto" prefHeight="26.0" prefWidth="125.0" text="Multiplicar Producto" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Button fx:id="BTNRecargaTelefonica" mnemonicParsing="false" onMouseClicked="#RealizarRecargaTelefonica" prefHeight="26.0" prefWidth="125.0" text="Recarga Telefonica" GridPane.rowIndex="2" />
+                  <Button fx:id="BTNPagoDeServicios" mnemonicParsing="false" onAction="#PagoDeServicios" prefHeight="26.0" prefWidth="125.0" text="Pago de Servicio" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <Button fx:id="BTNSalir" mnemonicParsing="false" onAction="#SalirVenta" prefHeight="26.0" prefWidth="125.0" text="SALIR" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <Button fx:id="BTNAbrirCaja" mnemonicParsing="false" onAction="#AbrirCajon" prefHeight="26.0" prefWidth="125.0" text="Abir Caja" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                  <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="139.0" text="Catalogo de Productos" GridPane.rowIndex="3" />
+               </children>
+            </GridPane>
+         </children>
+      </AnchorPane>
+      <TableView fx:id="TWTablaCarrito" layoutX="447.0" layoutY="68.0" prefHeight="233.0" prefWidth="312.0">
+        <columns>
+          <TableColumn fx:id="TCColumnaNombre" prefWidth="75.0" text="Nombre" />
+          <TableColumn fx:id="TCColumnaPrecio" prefWidth="75.0" text="Precio" />
+            <TableColumn fx:id="TCColumnaCantidad" prefWidth="75.0" text="Cantidad" />
+            <TableColumn fx:id="TCColumnaTotal" prefWidth="82.400146484375" text="Total" />
+        </columns>
+      </TableView>
+      <GridPane layoutX="468.0" layoutY="27.0" prefHeight="30.0" prefWidth="290.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="127.199951171875" minWidth="10.0" prefWidth="117.79997558593749" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="95.2000732421875" minWidth="10.0" prefWidth="77.00002441406247" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label text="Codigo Producto: " />
+            <TextField fx:id="TFCodigoProducto" GridPane.columnIndex="1" />
+            <Button fx:id="BTNAgregarProducto" mnemonicParsing="false" onAction="#AgregarProductoCarrito" text="Agregar" GridPane.columnIndex="2" />
+         </children>
+      </GridPane>
+   </children>
+</AnchorPane>
