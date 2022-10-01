@@ -1,7 +1,7 @@
 package controlador;
 
+import Aplication.CerrarVentanas;
 import BasesDeDatos.DatosBD;
-import java.io.EOFException;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -19,7 +19,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -42,6 +41,7 @@ public class VentasController implements Initializable {
     @FXML    private Label LBNombre;
     @FXML    private Label LBPrecio;
     @FXML    private Label LBPeso;
+    @FXML    private Label lbTotal;
     @FXML    private Button BTNChecarPRecio;
     @FXML    private Button BTNEliminarProducto;
     @FXML    private Button BTNProcesarVenta;
@@ -56,7 +56,6 @@ public class VentasController implements Initializable {
     @FXML    private TableColumn<Producto, String> TCColumnaNombre;
     @FXML    private TableColumn<Producto, Double> TCColumnaPrecio;
     @FXML    private TableColumn<Producto, Integer> TCColumnaCantidad;
-    @FXML    private TableColumn<Producto, String> TCColumnaTotal;
     @FXML    private TextField TFCodigoProducto;
     @FXML    private Button BTNAgregarProducto;
     
@@ -64,8 +63,11 @@ public class VentasController implements Initializable {
     private ArrayList<String> listProducto = new ArrayList<>();
     private DatosBD bbd = new DatosBD();
     private int guardai=-1;
+    private Double TotalVenta=0.0;
     private ObservableList<Map> lista;
     private ObservableList<Map> carrito;
+    
+    
     
     /**
      * Initializes the controller class.
@@ -74,6 +76,7 @@ public class VentasController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         try {
             bbd.conexionProductos(listProducto);
+            lbTotal.setText(Double.toString(TotalVenta));
             carrito = FXCollections.observableArrayList();
         } catch (SQLException ex) {
             Logger.getLogger(VentasController.class.getName()).log(Level.SEVERE, null, ex);
@@ -176,9 +179,11 @@ public class VentasController implements Initializable {
             Pcarrito.setPrecio(Double.parseDouble(listProducto.get(guardai+2)));
             Pcarrito.setCantidad(Integer.parseInt(listProducto.get(guardai+3)));
             Pcarrito.setPeso(listProducto.get(guardai+4));
+            TotalVenta+=Pcarrito.getPrecio();
+            lbTotal.setText(Double.toString(TotalVenta));
             coleccion.put("Nombre",Pcarrito.getNombre());
             coleccion.put("Precio",Pcarrito.getPrecio());
-            coleccion.put("Cantidad",Pcarrito.getCantidad());
+            coleccion.put("Cantidad",1);
             coleccion.put("Total", Pcarrito.getPrecio());
             carrito.add(coleccion);
             TFCodigoProducto.setText(null);
@@ -204,14 +209,22 @@ public class VentasController implements Initializable {
     }
     
     public void closeWindow() {
+        CerrarVentanas cerrar = new CerrarVentanas();
+        cerrar.cerrarVentanaVentas(this.BTNSalir);
+    }
+
+    @FXML
+    private void RealizarVenta(MouseEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/vista/ventanaLogin.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/vista/MetodoPago.fxml"));
             Parent root = loader.load();
-            VentanaLoginController controlador = loader.getController();
+            MetodoPagoController controlador = loader.getController();
+            controlador.pasarVentanaAnterior("Ventas");
+            controlador.pasarTotal(TotalVenta);
+            controlador.pasarCarrito(carrito);
             Scene scene = new Scene(root);
             Stage stage = new Stage();
-            
-            
+         
             stage.setScene(scene);
             stage.show();
             
@@ -222,9 +235,17 @@ public class VentasController implements Initializable {
             Logger.getLogger(VentasController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-    @FXML
-    private void RealizarVenta(MouseEvent event) {
+    
+    public void recivoCarrito(ObservableList<Map> carritoRegreso){
+        this.carrito=carritoRegreso;
     }
-
+    
+    public void pintarCarrito(){
+        lista=carrito;
+        this.TCColumnaNombre.setCellValueFactory(new MapValueFactory("Nombre"));
+        this.TCColumnaPrecio.setCellValueFactory(new MapValueFactory("Precio"));
+        this.TCColumnaCantidad.setCellValueFactory(new MapValueFactory("Cantidad"));
+        this.TWTablaCarrito.setItems(lista);
+    }
+    
 }

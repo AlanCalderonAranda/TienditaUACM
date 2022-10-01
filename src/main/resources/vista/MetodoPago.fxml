@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlador.MetodoPagoController">
+   <children>
+      <Label layoutX="110.0" layoutY="38.0" prefHeight="32.0" prefWidth="381.0" text="Selecciona un Metodo de Pago">
+         <font>
+            <Font name="Consolas" size="24.0" />
+         </font>
+      </Label>
+      <GridPane layoutX="75.0" layoutY="131.0" prefHeight="186.0" prefWidth="441.0">
+        <columnConstraints>
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Button fx:id="btnEfectivo" contentDisplay="TOP" mnemonicParsing="false" onMouseClicked="#btnPagoEnEfectivo" prefHeight="128.0" prefWidth="165.0" text="Efectivo">
+               <graphic>
+                  <ImageView fitHeight="109.0" fitWidth="142.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/pagoEfectivo.png" />
+                     </image></ImageView>
+               </graphic>
+            </Button>
+            <Button fx:id="btnTarjeta" contentDisplay="TOP" mnemonicParsing="false" onMouseClicked="#PagoConTarjeta" text="Tarjeta" GridPane.columnIndex="1">
+               <graphic>
+                  <ImageView fitHeight="109.0" fitWidth="154.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/pagoTarjeta.png" />
+                     </image></ImageView>
+               </graphic>
+            </Button>
+         </children>
+      </GridPane>
+      <Button fx:id="btnCancelar" layoutX="270.0" layoutY="331.0" mnemonicParsing="false" onMouseClicked="#cancelarMetodoPago" text="Cancelar" />
+   </children>
+</AnchorPane>
