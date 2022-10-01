@@ -46,7 +46,7 @@ public class MetodoPagoController implements Initializable {
         
     }
     
-    public void pasarTotal(Double totalVenta){
+    public void reciboTotal(Double totalVenta){
         this.totalVenta=totalVenta;
     }
     
@@ -57,6 +57,7 @@ public class MetodoPagoController implements Initializable {
     void closeWindow() {
             CerrarVentanas cerrar = new CerrarVentanas();
             cerrar.dameCarrito(carritoAnterior);
+            cerrar.dameTotalVenta(totalVenta);
             cerrar.cerrarVentanaMP(ventanaAnterior, btnCancelar);
     }
     

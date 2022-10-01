@@ -53,7 +53,7 @@ public class VentanaLoginController implements Initializable {
         
     }
 
-    @FXML    private void Login(MouseEvent event) throws IOException, Exception {
+    @FXML    private void Login(MouseEvent event) throws IOException, Exception{
         if (!(datosCorrectos() == 1)) {
             throw new Exception("Los datos ingresados no son correctos");
         }

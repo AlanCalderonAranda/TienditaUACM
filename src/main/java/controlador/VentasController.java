@@ -41,6 +41,7 @@ public class VentasController implements Initializable {
     @FXML    private Label LBNombre;
     @FXML    private Label LBPrecio;
     @FXML    private Label LBPeso;
+    @FXML    private Label LBDescripcion;
     @FXML    private Label lbTotal;
     @FXML    private Button BTNChecarPRecio;
     @FXML    private Button BTNEliminarProducto;
@@ -66,17 +67,25 @@ public class VentasController implements Initializable {
     private Double TotalVenta=0.0;
     private ObservableList<Map> lista;
     private ObservableList<Map> carrito;
+    private CerrarVentanas cerrar = new CerrarVentanas();
+    
     
     
     
     /**
      * Initializes the controller class.
      */
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try {
             bbd.conexionProductos(listProducto);
             lbTotal.setText(Double.toString(TotalVenta));
+            LBDescripcion.setText(null);
+            LBNombre.setText(null);
+            LBDescripcion.setText(null);
+            LBPrecio.setText(null);
+            LBPeso.setText(null);
             carrito = FXCollections.observableArrayList();
         } catch (SQLException ex) {
             Logger.getLogger(VentasController.class.getName()).log(Level.SEVERE, null, ex);
@@ -140,7 +149,7 @@ public class VentasController implements Initializable {
         
     @FXML
     private void RealizarRecargaTelefonica(MouseEvent event){
-        
+        cerrar.cerrarVentanaMP("Recargas", BTNRecargaTelefonica);
     }
     
     @FXML
@@ -148,7 +157,7 @@ public class VentasController implements Initializable {
         
     }
 
-    @FXML    private void SalirVenta(ActionEvent event) {
+    @FXML    private void SalirVenta(ActionEvent event){
         closeWindow();
     }
 
@@ -162,8 +171,40 @@ public class VentasController implements Initializable {
             throw new Exception("Debe ser numero");
         }
         llenarCarrito(Integer.parseInt(TFCodigoProducto.getText()));
-     
     }
+    
+    @FXML
+    private void RealizarVenta(MouseEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/vista/MetodoPago.fxml"));
+            Parent root = loader.load();
+            MetodoPagoController controlador = loader.getController();
+            controlador.pasarVentanaAnterior("Ventas");
+            controlador.reciboTotal(TotalVenta);
+            controlador.pasarCarrito(carrito);
+            Scene scene = new Scene(root);
+            Stage stage = new Stage();
+         
+            stage.setScene(scene);
+            stage.show();
+            
+            stage.setOnCloseRequest(e->controlador.closeWindow());
+            Stage myStage = (Stage) this.BTNSalir.getScene().getWindow();
+            myStage.close();
+        } catch (IOException ex) {
+            Logger.getLogger(VentasController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void recivoTotal(Double totalRecibido){
+        this.TotalVenta=totalRecibido;
+        this.lbTotal.setText(Double.toString(totalRecibido));
+    }
+    
+    public void recivoCarrito(ObservableList<Map> carritoRegreso){
+        this.carrito=carritoRegreso;
+    }
+    
     
     private void llenarCarrito(int idProducto){
         lista = obtenetProductos(idProducto);
@@ -177,12 +218,17 @@ public class VentasController implements Initializable {
         if(buscaEnBDProducto(idProducto)==true){
             Producto Pcarrito = new Producto();
             Map<String, Object> coleccion = new HashMap<> ();
+            Pcarrito.setIdProducto(guardai);
             Pcarrito.setNombre(listProducto.get(guardai+1));
             Pcarrito.setPrecio(Double.parseDouble(listProducto.get(guardai+2)));
             Pcarrito.setCantidad(Integer.parseInt(listProducto.get(guardai+3)));
             Pcarrito.setPeso(listProducto.get(guardai+4));
+            Pcarrito.setDescripcion(listProducto.get(guardai+5));
+            //Actualizamos el Total que debe pagar el cliente por los productos en su carrito
             TotalVenta+=Pcarrito.getPrecio();
             lbTotal.setText(Double.toString(TotalVenta));
+            //Mostramos en pantalla los datos del producto que desea comprar
+            mostrarDatosProducto(Pcarrito);
             coleccion.put("Nombre",Pcarrito.getNombre());
             coleccion.put("Precio",Pcarrito.getPrecio());
             coleccion.put("Cantidad",1);
@@ -210,36 +256,11 @@ public class VentasController implements Initializable {
         return bandera;
     }
     
-    public void closeWindow() {
-        CerrarVentanas cerrar = new CerrarVentanas();
-        cerrar.cerrarVentanaVentas(this.BTNSalir);
-    }
-
-    @FXML
-    private void RealizarVenta(MouseEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/vista/MetodoPago.fxml"));
-            Parent root = loader.load();
-            MetodoPagoController controlador = loader.getController();
-            controlador.pasarVentanaAnterior("Ventas");
-            controlador.pasarTotal(TotalVenta);
-            controlador.pasarCarrito(carrito);
-            Scene scene = new Scene(root);
-            Stage stage = new Stage();
-         
-            stage.setScene(scene);
-            stage.show();
-            
-            stage.setOnCloseRequest(e->controlador.closeWindow());
-            Stage myStage = (Stage) this.BTNSalir.getScene().getWindow();
-            myStage.close();
-        } catch (IOException ex) {
-            Logger.getLogger(VentasController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    public void recivoCarrito(ObservableList<Map> carritoRegreso){
-        this.carrito=carritoRegreso;
+    private void mostrarDatosProducto(Producto productoAMostrar){
+        LBNombre.setText(productoAMostrar.getNombre());
+        LBPrecio.setText(Double.toString(productoAMostrar.getPrecio()));
+        LBPeso.setText(productoAMostrar.getPeso());
+        LBDescripcion.setText(productoAMostrar.getDescripcion());
     }
     
     public void pintarCarrito(){
@@ -248,7 +269,12 @@ public class VentasController implements Initializable {
         this.TCColumnaPrecio.setCellValueFactory(new MapValueFactory("Precio"));
         this.TCColumnaCantidad.setCellValueFactory(new MapValueFactory("Cantidad"));
         this.TWTablaCarrito.setItems(lista);
-        
+    }
+    
+    
+    public void closeWindow(){
+        CerrarVentanas cerrar1 = new CerrarVentanas();
+        cerrar1.cerrarVentanaVentas(this.BTNSalir);
     }
     
 }

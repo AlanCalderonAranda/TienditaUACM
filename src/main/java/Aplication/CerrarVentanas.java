@@ -22,6 +22,7 @@ import javafx.stage.Stage;
  */
 public class CerrarVentanas {
     private ObservableList<Map> carritoCV = FXCollections.observableArrayList();
+    private double TotalVenta;
     
     public void cerrarVentanaMP(String ventanaRegreso,Button BTNSalir){
         if(ventanaRegreso.equals("Ventas")){
@@ -30,6 +31,7 @@ public class CerrarVentanas {
                 Parent root = loader.load();
                 VentasController controlador = loader.getController();
                 controlador.recivoCarrito(carritoCV);
+                controlador.recivoTotal(TotalVenta);
                 controlador.pintarCarrito();
                 Scene scene = new Scene(root);
                 Stage stage = new Stage();
@@ -45,7 +47,7 @@ public class CerrarVentanas {
             }
         }
         if(ventanaRegreso.equals("Recargas")){
-            
+            System.out.println("Mostraremos la ventana Recargas");
         }
         if(ventanaRegreso.equals("PagoServicios")){
             
@@ -74,6 +76,9 @@ public class CerrarVentanas {
     
     public void dameCarrito(ObservableList<Map> carritoAnterior){
         this.carritoCV = carritoAnterior;
-        
+    }
+    
+    public void dameTotalVenta(double TotalRecibido){
+        this.TotalVenta=TotalRecibido;
     }
 }

@@ -66,6 +66,19 @@
                   <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="139.0" text="Catalogo de Productos" GridPane.rowIndex="3" />
                </children>
             </GridPane>
+            <GridPane layoutX="42.0" layoutY="170.0" prefHeight="30.0" prefWidth="357.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="174.0" minWidth="10.0" prefWidth="94.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="263.0" minWidth="10.0" prefWidth="263.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label text="Descripcion: " />
+                  <Label fx:id="LBDescripcion" text="Label" GridPane.columnIndex="1" />
+               </children>
+            </GridPane>
          </children>
       </AnchorPane>
       <TableView fx:id="TWTablaCarrito" layoutX="447.0" layoutY="68.0" prefHeight="233.0" prefWidth="312.0">
