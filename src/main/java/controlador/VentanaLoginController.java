@@ -53,21 +53,20 @@ public class VentanaLoginController implements Initializable {
         
     }
 
-    @FXML    private void Login(MouseEvent event) throws IOException {
-        if(datosCorrectos()==1){
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/vista/Ventas.fxml"));
-            Parent root = loader.load();
-            VentasController controlador = loader.getController();
-            Scene scene = new Scene(root);
-            Stage stage = new Stage();
-            stage.setScene(scene);
-            stage.show();
-            stage.setOnCloseRequest(e -> controlador.closeWindow());
-            Stage myStage = (Stage) this.btnLogin.getScene().getWindow();
-            myStage.close();
-        }else{
-            System.out.println("HOLA");
+    @FXML    private void Login(MouseEvent event) throws IOException, Exception {
+        if (!(datosCorrectos() == 1)) {
+            throw new Exception("Los datos ingresados no son correctos");
         }
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/vista/Ventas.fxml"));
+        Parent root = loader.load();
+        VentasController controlador = loader.getController();
+        Scene scene = new Scene(root);
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.show();
+        stage.setOnCloseRequest(e -> controlador.closeWindow());
+        Stage myStage = (Stage) this.btnLogin.getScene().getWindow();
+        myStage.close();
     }
     
     private int datosCorrectos() {
@@ -87,7 +86,7 @@ public class VentanaLoginController implements Initializable {
         return valor;
     }
     
-    void closeWindow() {
+    public void closeWindow() {
         System.exit(0);
     }
 }
