@@ -50,7 +50,7 @@ public class CerrarVentanas {
             System.out.println("Mostraremos la ventana Recargas");
         }
         if(ventanaRegreso.equals("PagoServicios")){
-            
+            System.out.println("Mostraremos la ventana Pago de Servicios");
         }
     }
     

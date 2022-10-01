@@ -148,13 +148,19 @@ public class VentasController implements Initializable {
     }
         
     @FXML
-    private void RealizarRecargaTelefonica(MouseEvent event){
+    private void RealizarRecargaTelefonica(MouseEvent event) throws Exception{
+        if(lista.size()>0){
+            throw new Exception("El carrito debe estar vacio");
+        }
         cerrar.cerrarVentanaMP("Recargas", BTNRecargaTelefonica);
     }
     
     @FXML
-    private void PagoDeServicios(ActionEvent event){
-        
+    private void PagoDeServicios(ActionEvent event) throws Exception{
+        if(lista.size()>0){
+            throw new Exception("El carrito debe estar vacio");
+        }
+        cerrar.cerrarVentanaMP("PagoServicios", BTNRecargaTelefonica);
     }
 
     @FXML    private void SalirVenta(ActionEvent event){
