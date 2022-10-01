@@ -1,6 +1,7 @@
 package controlador;
 
 import BasesDeDatos.DatosBD;
+import java.io.EOFException;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -18,6 +19,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -27,6 +29,7 @@ import javafx.scene.control.cell.MapValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import javax.swing.JOptionPane;
 import modelo.Producto;
 
 /**
@@ -61,6 +64,8 @@ public class VentasController implements Initializable {
     private ArrayList<String> listProducto = new ArrayList<>();
     private DatosBD bbd = new DatosBD();
     private int guardai=-1;
+    private ObservableList<Map> lista;
+    private ObservableList<Map> carrito;
     
     /**
      * Initializes the controller class.
@@ -69,20 +74,22 @@ public class VentasController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         try {
             bbd.conexionProductos(listProducto);
+            carrito = FXCollections.observableArrayList();
         } catch (SQLException ex) {
             Logger.getLogger(VentasController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }    
 
-    @FXML    private void ConsultarPrecioProducto(ActionEvent event) {
-        if(TFCodigoProducto.getText().isEmpty()){
-            System.out.println("Para checar el precio tienes que ingresar el codigo del producto");
-        }else{
-            for(int i=0;i<listProducto.size()/6;i++){
-                if(TFCodigoProducto.getText().equals(listProducto.get((i*6)))){
-                    System.out.println("El producto cuesta: "+listProducto.get((i*6)+2));
-                    break;
-                }
+    @FXML
+    private void ConsultarPrecioProducto(MouseEvent event) throws Exception {
+        if (!(TFCodigoProducto.getText() != null && TFCodigoProducto.getText().matches("[0-9]+"))) {
+            throw new Exception("Para checar el precio debe ingresar el codigo correcto");
+        }
+
+        for (int i = 0; i < listProducto.size() / 6; i++) {
+            if (TFCodigoProducto.getText().equals(listProducto.get((i * 6)))) {
+                System.out.println("El producto cuesta: " + listProducto.get((i * 6) + 2));
+                break;
             }
         }
     }
@@ -93,25 +100,47 @@ public class VentasController implements Initializable {
 
     @FXML
     private void CancelarVentaTotal(ActionEvent event) {
-        
+        this.TWTablaCarrito.setItems(null);
     }
 
     @FXML
     private void DuplicarProducto(ActionEvent event) {
-        
+        for(int i=0;i<carrito.size();i++){
+            System.out.println(carrito.get(i));
+            System.out.println(lista.get(i));
+        }
     }
 
     @FXML
     private void MultiplicarProducto(ActionEvent event) {
-        
+        int valor = 0,idproduct=0;
+        boolean productoCorrecto = true;
+        do {
+            valor = Integer.parseInt(JOptionPane.showInputDialog("Multiplicar: "));
+            if (!(valor <= 0 )) {
+                while(productoCorrecto){
+                    idproduct = Integer.parseInt(JOptionPane.showInputDialog("idProducto: "));
+                    if(buscaEnBDProducto(idproduct)==true){
+                        productoCorrecto=false;//Para romper el while
+                        do{
+                            llenarCarrito(idproduct);
+                            valor--;
+                        }while(valor>0);
+                        valor=1; //Le asignamos 1 para romer el primer do while
+                    }
+                }
+            }
+        }while (valor <= 0);
     }
-
+        
     @FXML
     private void RealizarRecargaTelefonica(MouseEvent event){
+        
     }
     
     @FXML
     private void PagoDeServicios(ActionEvent event){
+        
     }
 
     @FXML    private void SalirVenta(ActionEvent event) {
@@ -122,21 +151,25 @@ public class VentasController implements Initializable {
         
     }
 
-    @FXML    private void AgregarProductoCarrito(ActionEvent event) {
-        llenarCarrito();
+    @FXML
+    private void AgregarProductoCarrito(ActionEvent event) throws Exception {
+        if (!(TFCodigoProducto.getText() != null && TFCodigoProducto.getText().matches("[0-9]+"))) {
+            throw new Exception("Debe ser numero");
+        }
+        llenarCarrito(Integer.parseInt(TFCodigoProducto.getText()));
+     
     }
     
-    private void llenarCarrito(){
-        ObservableList<Map> lista = obtenetProductos();
+    private void llenarCarrito(int idProducto){
+        lista = obtenetProductos(idProducto);
         this.TCColumnaNombre.setCellValueFactory(new MapValueFactory("Nombre"));
         this.TCColumnaPrecio.setCellValueFactory(new MapValueFactory("Precio"));
         this.TCColumnaCantidad.setCellValueFactory(new MapValueFactory("Cantidad"));
         this.TWTablaCarrito.setItems(lista);
     }
     
-    private ObservableList<Map> obtenetProductos(){
-        if(buscaEnBDProducto(Integer.parseInt(TFCodigoProducto.getText()))==true){
-            ObservableList<Map> carrito = FXCollections.observableArrayList();
+    private ObservableList<Map> obtenetProductos(int idProducto){
+        if(buscaEnBDProducto(idProducto)==true){
             Producto Pcarrito = new Producto();
             Map<String, Object> coleccion = new HashMap<> ();
             Pcarrito.setNombre(listProducto.get(guardai+1));
@@ -148,11 +181,12 @@ public class VentasController implements Initializable {
             coleccion.put("Cantidad",Pcarrito.getCantidad());
             coleccion.put("Total", Pcarrito.getPrecio());
             carrito.add(coleccion);
+            TFCodigoProducto.setText(null);
             return carrito;
         }else{
+            
             return null;
         }
-        
     }
     
     private boolean buscaEnBDProducto(int idProducto){
@@ -188,4 +222,9 @@ public class VentasController implements Initializable {
             Logger.getLogger(VentasController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    @FXML
+    private void RealizarVenta(MouseEvent event) {
+    }
+
 }

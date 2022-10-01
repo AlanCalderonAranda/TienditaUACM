@@ -52,9 +52,9 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Button fx:id="BTNChecarPRecio" mnemonicParsing="false" onAction="#ConsultarPrecioProducto" prefHeight="26.0" prefWidth="125.0" text="Checar Precio" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <Button fx:id="BTNChecarPRecio" mnemonicParsing="false" onMouseClicked="#ConsultarPrecioProducto" prefHeight="26.0" prefWidth="125.0" text="Checar Precio" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                   <Button fx:id="BTNEliminarProducto" mnemonicParsing="false" onAction="#EliminarProductoCarrito" prefHeight="26.0" prefWidth="125.0" text="Eliminar Producto" GridPane.columnIndex="1" />
-                  <Button fx:id="BTNProcesarVenta" mnemonicParsing="false" prefHeight="26.0" prefWidth="125.0" text="Procesar Venta" />
+                  <Button fx:id="BTNProcesarVenta" mnemonicParsing="false" onMouseClicked="#RealizarVenta" prefHeight="26.0" prefWidth="125.0" text="Procesar Venta" />
                   <Button fx:id="BTNCancelarVenta" mnemonicParsing="false" onAction="#CancelarVentaTotal" prefHeight="26.0" prefWidth="125.0" text="Cancelar Venta" GridPane.columnIndex="2" />
                   <Button fx:id="DuplicarProducto" mnemonicParsing="false" onAction="#DuplicarProducto" prefHeight="26.0" prefWidth="125.0" text="Duplicar Producto" GridPane.rowIndex="1" />
                   <Button fx:id="BTNMultiplicarProducto" mnemonicParsing="false" onAction="#MultiplicarProducto" prefHeight="26.0" prefWidth="125.0" text="Multiplicar Producto" GridPane.columnIndex="1" GridPane.rowIndex="1" />
