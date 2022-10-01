@@ -88,7 +88,6 @@ public class VentasController implements Initializable {
         if (!(TFCodigoProducto.getText() != null && TFCodigoProducto.getText().matches("[0-9]+"))) {
             throw new Exception("Para checar el precio debe ingresar el codigo correcto");
         }
-
         for (int i = 0; i < listProducto.size() / 6; i++) {
             if (TFCodigoProducto.getText().equals(listProducto.get((i * 6)))) {
                 System.out.println("El producto cuesta: " + listProducto.get((i * 6) + 2));
@@ -98,7 +97,10 @@ public class VentasController implements Initializable {
     }
 
     @FXML    private void EliminarProductoCarrito(ActionEvent event) {
-        
+        TotalVenta-=TCColumnaPrecio.getCellData(TWTablaCarrito.getSelectionModel().getSelectedIndex());
+        lbTotal.setText(Double.toString(TotalVenta));
+        carrito.remove(TWTablaCarrito.getSelectionModel().getSelectedIndex());
+        pintarCarrito();
     }
 
     @FXML
@@ -246,6 +248,7 @@ public class VentasController implements Initializable {
         this.TCColumnaPrecio.setCellValueFactory(new MapValueFactory("Precio"));
         this.TCColumnaCantidad.setCellValueFactory(new MapValueFactory("Cantidad"));
         this.TWTablaCarrito.setItems(lista);
+        
     }
     
 }
