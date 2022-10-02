@@ -33,8 +33,9 @@ import modelo.Producto;
 
 /**
  * FXML Controller class
- *
- * @author alanc
+ * Clase para realizar las acciones correspondientes de las 
+ * ventas de productos de nuestra Tienda
+ * @author Alan Calderon
  */
 public class VentasController implements Initializable {
     @FXML    private ImageView IMGImagenProducto;
@@ -68,9 +69,6 @@ public class VentasController implements Initializable {
     private ObservableList<Map> lista;
     private ObservableList<Map> carrito;
     private CerrarVentanas cerrar = new CerrarVentanas();
-    
-    
-    
     
     /**
      * Initializes the controller class.
@@ -114,7 +112,10 @@ public class VentasController implements Initializable {
 
     @FXML
     private void CancelarVentaTotal(ActionEvent event) {
-        this.TWTablaCarrito.setItems(null);
+        lista.clear();
+        carrito.clear();
+        TotalVenta = 0.0;
+        lbTotal.setText(Double.toString(TotalVenta));
     }
 
     @FXML
@@ -149,10 +150,12 @@ public class VentasController implements Initializable {
         
     @FXML
     private void RealizarRecargaTelefonica(MouseEvent event) throws Exception{
-        if(lista.size()>0){
-            throw new Exception("El carrito debe estar vacio");
+        if(TWTablaCarrito.getItems().isEmpty()){
+            cerrar.cerrarVentanaMP("Recargas", BTNRecargaTelefonica);
+        }else{
+            System.out.println("El carrito Tiene Elementos");
         }
-        cerrar.cerrarVentanaMP("Recargas", BTNRecargaTelefonica);
+        
     }
     
     @FXML

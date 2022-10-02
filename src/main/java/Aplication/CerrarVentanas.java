@@ -2,6 +2,7 @@
 package Aplication;
 
 import controlador.VentanaLoginController;
+import controlador.VentanaRecargasController;
 import controlador.VentasController;
 import java.io.IOException;
 import java.util.Map;
@@ -47,7 +48,23 @@ public class CerrarVentanas {
             }
         }
         if(ventanaRegreso.equals("Recargas")){
-            System.out.println("Mostraremos la ventana Recargas");
+            try {
+                System.out.println("Entrando a Ventana Recargas");
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/vista/VentanaRecargas.fxml"));
+                Parent root = loader.load();
+                VentanaRecargasController controlador = loader.getController();
+                Scene scene = new Scene(root);
+                Stage stage = new Stage();
+                
+                stage.setScene(scene);
+                stage.show();
+                
+                stage.setOnCloseRequest(e -> controlador.closeWindow());
+                Stage myStage = (Stage) BTNSalir.getScene().getWindow();
+                myStage.close();
+            } catch (IOException ex) {
+                Logger.getLogger(CerrarVentanas.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         if(ventanaRegreso.equals("PagoServicios")){
             System.out.println("Mostraremos la ventana Pago de Servicios");
@@ -74,6 +91,10 @@ public class CerrarVentanas {
         }
     }
     
+    public void cerrarVentanaRecargas(Button BTNSalir) {
+        cerrarVentanaMP("Ventas", BTNSalir);
+    }
+    
     public void dameCarrito(ObservableList<Map> carritoAnterior){
         this.carritoCV = carritoAnterior;
     }
@@ -81,4 +102,6 @@ public class CerrarVentanas {
     public void dameTotalVenta(double TotalRecibido){
         this.TotalVenta=TotalRecibido;
     }
+
+    
 }
