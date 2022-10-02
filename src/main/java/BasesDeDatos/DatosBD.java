@@ -61,5 +61,24 @@ public class DatosBD {
         }
         conexion.close();
     }
-    
+    public void conexionInfoRecargas(ArrayList<String> INFORMACION) throws SQLException {
+        conexion = con.getConexion();
+        try {
+            sentencia = conexion.createStatement();
+            boolean execute = sentencia.execute("SELECT * FROM `InformacionRecargas`");
+            if (execute) {
+                ResultSet resultset = sentencia.getResultSet();
+                while (resultset.next()) {
+                    //Guardamos en el ArrayList
+                    INFORMACION.add(Integer.toString(resultset.getInt("IDInformacion")));
+                    INFORMACION.add(resultset.getString("Tipo"));
+                    INFORMACION.add(resultset.getString("Mensaje"));
+                    INFORMACION.add(Integer.toString(resultset.getInt("Precio")));
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DatosBD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        conexion.close();
+    }
 }

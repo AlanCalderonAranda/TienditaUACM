@@ -64,7 +64,7 @@ public class VentasController implements Initializable {
     private Producto productito = new Producto();
     private ArrayList<String> listProducto = new ArrayList<>();
     private DatosBD bbd = new DatosBD();
-    private int guardai=-1;
+    private int guardai=-1,totalArticulos=0;
     private Double TotalVenta=0.0;
     private ObservableList<Map> lista;
     private ObservableList<Map> carrito;
@@ -103,8 +103,12 @@ public class VentasController implements Initializable {
         }
     }
 
-    @FXML    private void EliminarProductoCarrito(ActionEvent event) {
-        TotalVenta-=TCColumnaPrecio.getCellData(TWTablaCarrito.getSelectionModel().getSelectedIndex());
+    @FXML    private void EliminarProductoCarrito(ActionEvent event) throws Exception{
+        if(carrito==null || lista==null || carrito.size()==0 || lista.size()==0){
+            throw new Exception("Carrito nulo o vacio");
+        }
+        totalArticulos--;
+        TotalVenta -= TCColumnaPrecio.getCellData(TWTablaCarrito.getSelectionModel().getSelectedIndex());
         lbTotal.setText(Double.toString(TotalVenta));
         carrito.remove(TWTablaCarrito.getSelectionModel().getSelectedIndex());
         pintarCarrito();
@@ -119,7 +123,10 @@ public class VentasController implements Initializable {
     }
 
     @FXML
-    private void DuplicarProducto(ActionEvent event) {
+    private void DuplicarProducto(ActionEvent event) throws Exception {
+        if(carrito==null || lista==null || carrito.size()==0 || lista.size()==0){
+            throw new Exception("Carrito nulo o vacio");
+        }
         for(int i=0;i<carrito.size();i++){
             System.out.println(carrito.get(i));
             System.out.println(lista.get(i));
@@ -160,10 +167,11 @@ public class VentasController implements Initializable {
     
     @FXML
     private void PagoDeServicios(ActionEvent event) throws Exception{
-        if(lista.size()>0){
-            throw new Exception("El carrito debe estar vacio");
+        if(TWTablaCarrito.getItems().isEmpty()){
+            cerrar.cerrarVentanaMP("PagoServicios", BTNRecargaTelefonica);
+        }else{
+            System.out.println("El carrito Tiene Elementos");
         }
-        cerrar.cerrarVentanaMP("PagoServicios", BTNRecargaTelefonica);
     }
 
     @FXML    private void SalirVenta(ActionEvent event){
@@ -183,14 +191,18 @@ public class VentasController implements Initializable {
     }
     
     @FXML
-    private void RealizarVenta(MouseEvent event) {
+    private void RealizarVenta(MouseEvent event) throws Exception {
+        if(carrito==null || lista==null || carrito.size()==0 || lista.size()==0){
+            throw new Exception("Carrito nulo o vacio");
+        }
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/vista/MetodoPago.fxml"));
             Parent root = loader.load();
             MetodoPagoController controlador = loader.getController();
-            controlador.pasarVentanaAnterior("Ventas");
             controlador.reciboTotal(TotalVenta);
-            controlador.pasarCarrito(carrito);
+            controlador.InfoVentas(carrito,totalArticulos);
+            controlador.pasarVentanaAnterior("Ventas");
+            
             Scene scene = new Scene(root);
             Stage stage = new Stage();
          
@@ -212,6 +224,7 @@ public class VentasController implements Initializable {
     
     public void recivoCarrito(ObservableList<Map> carritoRegreso){
         this.carrito=carritoRegreso;
+        this.totalArticulos=carrito.size();
     }
     
     
@@ -236,6 +249,7 @@ public class VentasController implements Initializable {
             //Actualizamos el Total que debe pagar el cliente por los productos en su carrito
             TotalVenta+=Pcarrito.getPrecio();
             lbTotal.setText(Double.toString(TotalVenta));
+            totalArticulos++;
             //Mostramos en pantalla los datos del producto que desea comprar
             mostrarDatosProducto(Pcarrito);
             coleccion.put("Nombre",Pcarrito.getNombre());

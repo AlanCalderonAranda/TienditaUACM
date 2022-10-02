@@ -49,7 +49,6 @@ public class CerrarVentanas {
         }
         if(ventanaRegreso.equals("Recargas")){
             try {
-                System.out.println("Entrando a Ventana Recargas");
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/vista/VentanaRecargas.fxml"));
                 Parent root = loader.load();
                 VentanaRecargasController controlador = loader.getController();
@@ -66,10 +65,24 @@ public class CerrarVentanas {
                 Logger.getLogger(CerrarVentanas.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        if(ventanaRegreso.equals("PagoServicios")){
-            System.out.println("Mostraremos la ventana Pago de Servicios");
+        if (ventanaRegreso.equals("PagoServicios")) {
+            /*
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/vista/VentanaRecargas.fxml"));
+            Parent root = loader.load();
+             controlador = loader.getController();
+            Scene scene = new Scene(root);
+            Stage stage = new Stage();
+
+            stage.setScene(scene);
+            stage.show();
+
+            stage.setOnCloseRequest(e -> controlador.closeWindow());
+            Stage myStage = (Stage) BTNSalir.getScene().getWindow();
+            myStage.close();
+        */
         }
     }
+    
     
     public void cerrarVentanaVentas(Button BTNSalir) {
         try {
