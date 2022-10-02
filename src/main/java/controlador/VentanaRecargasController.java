@@ -81,15 +81,15 @@ public class VentanaRecargasController implements Initializable {
     }
 
     @FXML
-    private void ElegirRecarga(MouseEvent event) {
+    private void ElegirRecarga(MouseEvent event) throws Exception {
         if(!(verificarNumero(tfNumeroCelular.getText())==true && verificarNumero(tfNumeroConfirmado.getText())==true)){
-            System.out.println("Debes de ingresar un numero");
+            throw new Exception("Debe ser un numero");
         }
         if(!(tfNumeroCelular.getText().equals(tfNumeroConfirmado.getText()))){
-                System.out.println("Los numeros deben ser iguales");
+            throw new Exception("Los numeros tienen que ser iguales");
         }
         if(!(cbOperador.getValue()!=null)){
-            System.out.println("Debes seleccionar alguna compania");
+            throw new Exception("Debes seleccionar una compania");
         }
         accRecarga.setVisible(true);
     }
@@ -155,10 +155,8 @@ public class VentanaRecargasController implements Initializable {
     private boolean verificarNumero(String numero){
         boolean regreso=false;
         if(numero != null && numero.matches("[0-9]+")){
-            System.out.println("Es un numero");
             //Comprobar si es de 10 digitos
             if(numero.length()==10){
-                System.out.println("Es un numero correcto");
                 regreso=true;
             }
         }
